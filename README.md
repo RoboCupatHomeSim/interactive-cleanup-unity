@@ -1,12 +1,12 @@
 # Interactive Cleanup Project
 
-This is a Unity project for the Interactive Cleanup task of the Partner Robot Challenge (Virtual Space) in the World Robot Competition.
+This is a Unity project for the Interactive Cleanup task of the RoboCup@Home Simulation.
 
 Please prepare a common unitypackage in advance, and import the unitypackage to this project.  
 For details of using the common unitypackage, please see an instruction in the following repository:  
-https://github.com/PartnerRobotChallengeVirtual/common-unity.git
+https://github.com/RoboCupatHomeSim/common-unity.git
 
-See also [wiki page](https://github.com/PartnerRobotChallengeVirtual/interactive-cleanup-unity/wiki).
+See also [wiki page](https://github.com/RoboCupatHomeSim/interactive-cleanup-unity/wiki).
 
 ## Prerequisites
 
@@ -19,7 +19,7 @@ See also [wiki page](https://github.com/PartnerRobotChallengeVirtual/interactive
 
 1. Open this project with Unity.
 2. Click [Assets]-[Import Package]-[Custom Package...].
-3. Select a common unitypackage (e.g. wrs-virtual-common.unitypackage) and open the file.
+3. Select a common unitypackage (e.g. robocup-common.unitypackage) and open the file.
 4. Click [Import] button.
 5. Please confirm that no error occurred in Console window.
 
@@ -51,7 +51,7 @@ The procedure is like as follows.
 #### Import Files
 Please import files by following the steps below.
 1. Prepare "ConsoleSimpleTTS.exe" and "Interop.SpeechLib.dll".  
-For details on these files, see [here](https://github.com/PartnerRobotChallengeVirtual/console-simple-tts).
+For details on these files, see [here](https://github.com/RoboCupatHomeSim/console-simple-tts).
 2. Copy those files to the "TTS" folder in the same directory as SIGVerseConfig folder.
 
 
