@@ -40072,3 +40072,4 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 279
+  transparentMaterial: {fileID: 2100000, guid: a06e563040b3585428eb7f820d9dc6e8, type: 2}
