@@ -11,7 +11,7 @@ See also [wiki page](https://github.com/RoboCupatHomeSim/interactive-cleanup-uni
 ## Prerequisites
 
 - OS: Windows 10
-- Unity version: 2018.4.16f1
+- Unity version: 2018.4.11f1
 
 ## How to Build
 
