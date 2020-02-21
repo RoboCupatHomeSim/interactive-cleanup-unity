@@ -65,3 +65,5 @@ SIGVerse*.log
 /Assets/SIGVerse*
 /Assets/Competition/Common*
 
+/Assets/Competition/InteractiveCleanup/HiddenFiles*
+
