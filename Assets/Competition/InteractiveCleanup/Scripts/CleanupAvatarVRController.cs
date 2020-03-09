@@ -30,9 +30,10 @@ namespace SIGVerse.Competition.InteractiveCleanup
 
 		public GameObject initialPositionMarker;
 
+		public CapsuleCollider rootCapsuleCollider;
+
 		//----------------------------------------
 
-		private CapsuleCollider       rootCapsuleCollider;
 		private List<CapsuleCollider> capsuleColliders;
 
 		SimpleHumanVRController simpleHumanVRController;
@@ -42,7 +43,6 @@ namespace SIGVerse.Competition.InteractiveCleanup
 
 		void Awake()
 		{
-			this.rootCapsuleCollider   = this.GetComponent<CapsuleCollider>();
 			this.capsuleColliders      = this.GetComponentsInChildren<CapsuleCollider>().ToList();
 			this.capsuleColliders.Remove(this.rootCapsuleCollider);
 
