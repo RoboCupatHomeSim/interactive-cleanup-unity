@@ -1,5 +1,8 @@
+using SIGVerse.Common;
 using SIGVerse.Human.IK;
 using SIGVerse.Human.VR;
+using SIGVerse.SIGVerseRosBridge;
+using SIGVerse.ToyotaHSR;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +10,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+
+using UnityEngine.XR.Management;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 namespace SIGVerse.Competition.InteractiveCleanup
 {
@@ -23,7 +30,9 @@ namespace SIGVerse.Competition.InteractiveCleanup
 		public Laser laserLeft;
 		public Laser laserRight;
 
-		public GameObject ovrCameraRig;
+		public GameObject cameraRig;
+		public GameObject eyeAnchor;
+
 		public Animator   avatarAnimator;
 
 		public List<GameObject> avatarMotionDestinations;
@@ -32,13 +41,17 @@ namespace SIGVerse.Competition.InteractiveCleanup
 
 		public CapsuleCollider rootCapsuleCollider;
 
+		public GameObject rosBridgeScripts;
+
 		//----------------------------------------
 
 		private List<CapsuleCollider> capsuleColliders;
 
-		SimpleHumanVRController simpleHumanVRController;
-		SimpleIK simpleIK;
-		List<CleanupAvatarVRHandController> cleanupAvatarVRHandControllers;
+		private SimpleHumanVRController simpleHumanVRController;
+		private SimpleIK simpleIK;
+		private List<CleanupAvatarVRHandController> cleanupAvatarVRHandControllers;
+
+		private XRLoader activeLoader;
 
 
 		void Awake()
@@ -57,15 +70,8 @@ namespace SIGVerse.Competition.InteractiveCleanup
 				// For the competition. Read generated data.
 				case ExecutionMode.Competition:
 				{
-					this.ovrCameraRig.SetActive(false);
+					this.cameraRig.SetActive(false);
 					this.avatarAnimator.enabled = false;
-
-					CleanupAvatarVRHandController[] cleanupAvatarVRHandControllers = this.GetComponentsInChildren<CleanupAvatarVRHandController>();
-
-					foreach(CleanupAvatarVRHandController cleanupAvatarVRHandController in cleanupAvatarVRHandControllers)
-					{
-						cleanupAvatarVRHandController.enabled = false;
-					}
 
 					this.rootCapsuleCollider.enabled = false;
 					foreach(CapsuleCollider capsuleCollider in this.capsuleColliders){ capsuleCollider.enabled = true; }
@@ -76,6 +82,11 @@ namespace SIGVerse.Competition.InteractiveCleanup
 
 					this.initialPositionMarker.SetActive(false);
 
+					// Add for SteamVR START
+					Rigidbody[] rigidbodies = this.GetComponentsInChildren<Rigidbody>(true);
+					foreach(Rigidbody rigidbody in rigidbodies){ rigidbody.useGravity = false; }
+					// Add for SteamVR END
+
 					this.enabled = false;
 
 					break;
@@ -83,17 +94,7 @@ namespace SIGVerse.Competition.InteractiveCleanup
 				// For data generation. 
 				case ExecutionMode.DataGeneration:
 				{
-					this.ovrCameraRig.SetActive(true);
-					this.avatarAnimator.enabled = true;
-
-					this.rootCapsuleCollider.enabled = true;
-					foreach(CapsuleCollider capsuleCollider in this.capsuleColliders){ capsuleCollider.enabled = false; }
-
-					this.simpleHumanVRController.enabled = true;
-					this.simpleIK               .enabled = true;
-					foreach(CleanupAvatarVRHandController cleanupAvatarVRHandController in this.cleanupAvatarVRHandControllers){ cleanupAvatarVRHandController.enabled = true; }
-
-					this.initialPositionMarker.SetActive(true);
+					StartCoroutine(this.InitializeHumanForDataGeneration());
 
 					break;
 				}
@@ -103,35 +104,91 @@ namespace SIGVerse.Competition.InteractiveCleanup
 				}
 			}
 		}
-		
-		// Use this for initialization
-		void Start()
+
+		private IEnumerator InitializeHumanForDataGeneration()
 		{
+			if(CleanupConfig.Instance.configFileInfo.reduceLoadInDataGen)
+			{
+				this.ReduceLoad();
+			}
+
+			yield return this.InitializeXRForDataGeneration();
+
+			this.EnableScriptsForDataGeneration();
 		}
 
-#if SIGVERSE_USING_OCULUS_RIFT
+		private IEnumerator InitializeXRForDataGeneration()
+		{
+			// Initialize XR System
+			XRManagerSettings xrManagerSettings = XRGeneralSettings.Instance.Manager;
+
+			if (xrManagerSettings == null) { SIGVerseLogger.Error("xrManagerSettings == null"); yield break; }
+
+			if(xrManagerSettings.activeLoader == null)
+			{
+				yield return xrManagerSettings.InitializeLoader();
+			}
+
+			this.activeLoader = xrManagerSettings.activeLoader;
+
+			if (this.activeLoader == null)
+			{
+				Debug.LogError("Initializing XR Failed.");
+				yield break;
+			}
+
+			xrManagerSettings.activeLoader.Start();
+
+			SteamVR_Actions.sigverse.Activate(SteamVR_Input_Sources.Any);
+		}
+
+		private void ReduceLoad()
+		{
+			this.rosBridgeScripts.GetComponentInChildren<HSRPubXtionDepthController>().sendingInterval *= 1000;
+			this.rosBridgeScripts.GetComponentInChildren<HSRPubXtionRGBController>().sendingInterval *= 1000;
+			this.rosBridgeScripts.GetComponentInChildren<HSRPubStereoRGBController>().sendingInterval *= 1000;
+			this.rosBridgeScripts.GetComponentsInChildren<HSRPubWideRGBController>().ToList().ForEach(x => x.sendingInterval *= 1000);
+		}
+
+		private void EnableScriptsForDataGeneration()
+		{
+			this.cameraRig.SetActive(true);
+			this.avatarAnimator.enabled = true;
+
+			this.rootCapsuleCollider.enabled = true;
+			foreach(CapsuleCollider capsuleCollider in this.capsuleColliders){ capsuleCollider.enabled = false; }
+
+			this.simpleHumanVRController.enabled = true;
+			this.simpleIK               .enabled = true;
+			foreach(CleanupAvatarVRHandController cleanupAvatarVRHandController in this.cleanupAvatarVRHandControllers){ cleanupAvatarVRHandController.enabled = true; }
+
+			this.initialPositionMarker.SetActive(true);
+
+
+			// Add for SteamVR START
+			this.GetComponent<Player>().enabled = true;
+
+			this.cameraRig.GetComponent<SIGVerse.Human.IK.AnchorPostureCalculator>().enabled = true;
+
+			SteamVR_Behaviour_Pose[] steamVrBehaviourPoses = this.cameraRig.GetComponentsInChildren<SteamVR_Behaviour_Pose>();
+			foreach(SteamVR_Behaviour_Pose steamVrBehaviourPose in steamVrBehaviourPoses){ steamVrBehaviourPose.enabled = true;}
+
+			Hand[] hands = this.cameraRig.GetComponentsInChildren<Hand>(true);
+			foreach(Hand hand in hands){ hand.enabled = true; }
+
+			this.eyeAnchor.GetComponent<Camera>().enabled = true;
+			this.eyeAnchor.GetComponent<SteamVR_CameraHelper>().enabled = true;
+			// Add for SteamVR END
+		}
+
+
+//#if SIGVERSE_USING_OCULUS_RIFT
 
 		// Update is called once per frame
 		void Update()
 		{
-			// Enable/Disable Laser of Right hand
-			if (OVRInput.Get(OVRInput.RawAxis1D.RHandTrigger) > 0.95)
-			{
-				if(!this.laserRight.gameObject.activeInHierarchy)
-				{
-					this.laserRight.Activate();
-				}
-			}
-			else
-			{
-				if(this.laserRight.gameObject.activeInHierarchy)
-				{
-					this.laserRight.Deactivate();
-				}
-			}
-
 			// Enable/Disable Laser of Left hand
-			if (OVRInput.Get(OVRInput.RawAxis1D.LHandTrigger) > 0.95)
+			if (SteamVR_Actions.sigverse_SqueezeMiddle.GetAxis(SteamVR_Input_Sources.LeftHand) > 0.95)
 			{
 				if(!this.laserLeft.gameObject.activeInHierarchy)
 				{
@@ -146,8 +203,24 @@ namespace SIGVerse.Competition.InteractiveCleanup
 				}
 			}
 
+			// Enable/Disable Laser of Right hand
+			if (SteamVR_Actions.sigverse_SqueezeMiddle.GetAxis(SteamVR_Input_Sources.RightHand) > 0.95)
+			{
+				if(!this.laserRight.gameObject.activeInHierarchy)
+				{
+					this.laserRight.Activate();
+				}
+			}
+			else
+			{
+				if(this.laserRight.gameObject.activeInHierarchy)
+				{
+					this.laserRight.Deactivate();
+				}
+			}
 
-			if (this.laserLeft.gameObject.activeInHierarchy && OVRInput.GetDown(OVRInput.RawButton.LIndexTrigger))
+
+			if (this.laserLeft.gameObject.activeInHierarchy && SteamVR_Actions.sigverse_PressIndex.GetStateDown(SteamVR_Input_Sources.LeftHand))
 			{
 				string selectedTargetName = this.laserLeft.Point(true);
 
@@ -165,7 +238,7 @@ namespace SIGVerse.Competition.InteractiveCleanup
 			}
 
 
-			if (this.laserRight.gameObject.activeInHierarchy && OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger))
+			if (this.laserRight.gameObject.activeInHierarchy && SteamVR_Actions.sigverse_PressIndex.GetStateDown(SteamVR_Input_Sources.RightHand))
 			{
 				string selectedTargetName = this.laserRight.Point(true);
 
@@ -182,7 +255,7 @@ namespace SIGVerse.Competition.InteractiveCleanup
 				Debug.Log("selectedTargetName=" + selectedTargetName);
 			}
 
-			if(OVRInput.GetDown(OVRInput.RawButton.A))
+			if(SteamVR_Actions.sigverse_PressNearButton.GetStateDown(SteamVR_Input_Sources.RightHand))
 			{
 				foreach (GameObject avatarMotionDestination in this.avatarMotionDestinations)
 				{
@@ -197,7 +270,7 @@ namespace SIGVerse.Competition.InteractiveCleanup
 				Debug.Log("Pressed A button");
 			}
 
-			if(OVRInput.GetDown(OVRInput.RawButton.X))
+			if(SteamVR_Actions.sigverse_PressNearButton.GetStateDown(SteamVR_Input_Sources.LeftHand))
 			{
 				foreach (GameObject avatarMotionDestination in this.avatarMotionDestinations)
 				{
@@ -212,6 +285,15 @@ namespace SIGVerse.Competition.InteractiveCleanup
 				Debug.Log("Pressed X button");
 			}
 		}
-#endif
+		void OnDestroy()
+		{
+			// It is mandatory to perform this termination process.
+			if(this.activeLoader != null)
+			{
+				this.activeLoader.Stop();
+				XRGeneralSettings.Instance.Manager.DeinitializeLoader();
+			}
+		}
+//#endif
 	}
 }

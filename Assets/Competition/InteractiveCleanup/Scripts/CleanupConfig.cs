@@ -19,6 +19,7 @@ namespace SIGVerse.Competition.InteractiveCleanup
 		public bool   isAlwaysGoNext;
 		public int    playbackType;
 		public float  bgmVolume;
+		public bool   reduceLoadInDataGen;
 	}
 
 	public enum ExecutionMode
@@ -67,14 +68,15 @@ namespace SIGVerse.Competition.InteractiveCleanup
 #if UNITY_EDITOR
 				SIGVerseLogger.Warn("Interactive Cleanup config file does not exists.");
 
-				this.configFileInfo.teamName          = "XXXX";
-				this.configFileInfo.sessionTimeLimit  = 360;
-				this.configFileInfo.maxNumberOfTrials = 15;
-				this.configFileInfo.isScoreFileRead   = false;
-				this.configFileInfo.executionMode     = (int)ExecutionMode.Competition;
-				this.configFileInfo.isAlwaysGoNext    = false;
-				this.configFileInfo.playbackType      = CleanupPlaybackCommon.PlaybackTypeRecord;
-				this.configFileInfo.bgmVolume         = 0.01f;
+				this.configFileInfo.teamName            = "XXXX";
+				this.configFileInfo.sessionTimeLimit    = 360;
+				this.configFileInfo.maxNumberOfTrials   = 15;
+				this.configFileInfo.isScoreFileRead     = false;
+				this.configFileInfo.executionMode       = (int)ExecutionMode.Competition;
+				this.configFileInfo.isAlwaysGoNext      = false;
+				this.configFileInfo.playbackType        = CleanupPlaybackCommon.PlaybackTypeRecord;
+				this.configFileInfo.bgmVolume           = 0.01f;
+				this.configFileInfo.reduceLoadInDataGen = false;
 
 				this.SaveConfig();
 #else

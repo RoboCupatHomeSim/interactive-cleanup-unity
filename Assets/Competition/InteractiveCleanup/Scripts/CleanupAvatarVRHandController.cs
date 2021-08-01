@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
+using Valve.VR;
+
 namespace SIGVerse.Competition.InteractiveCleanup
 {
 	public class CleanupAvatarVRHandController : MonoBehaviour
 	{
-#if SIGVERSE_USING_OCULUS_RIFT
+//#if SIGVERSE_USING_OCULUS_RIFT
 
 		public enum HandType
 		{
@@ -21,6 +23,8 @@ namespace SIGVerse.Competition.InteractiveCleanup
 
 //		public float handTrigger1D =1;
 		//-----------
+		private SteamVR_Input_Sources inputSource;
+
 		private Transform thumb1, index1, middle1, ring1, pinky1;
 		private Transform thumb2, index2, middle2, ring2, pinky2;
 		private Transform thumb3, index3, middle3, ring3, pinky3;
@@ -62,6 +66,9 @@ namespace SIGVerse.Competition.InteractiveCleanup
 		// Use this for initialization
 		void Start()
 		{
+			if(this.handType==HandType.LeftHand) { this.inputSource = SteamVR_Input_Sources.LeftHand; }
+			if(this.handType==HandType.RightHand){ this.inputSource = SteamVR_Input_Sources.RightHand; }
+
 //			this.handStart    = this.hand   .localRotation;
 			this.thumb1Start  = this.thumb1 .localRotation;   this.thumb2Start  = this.thumb2 .localRotation;   this.thumb3Start  = this.thumb3 .localRotation;
 			this.index1Start  = this.index1 .localRotation;   this.index2Start  = this.index2 .localRotation;   this.index3Start  = this.index3 .localRotation;
@@ -97,7 +104,7 @@ namespace SIGVerse.Competition.InteractiveCleanup
 		// Update is called once per frame
 		void LateUpdate()
 		{
-			float handTrigger1D = (this.handType == HandType.LeftHand)? OVRInput.Get(OVRInput.RawAxis1D.LHandTrigger) : OVRInput.Get(OVRInput.RawAxis1D.RHandTrigger);
+			float handTrigger1D = SteamVR_Actions.sigverse_Squeeze.GetAxis(this.inputSource);
 
 			// Change hand posture
 //			this.hand   .localRotation = Quaternion.Slerp(this.handStart   , this.handEnd   , handTrigger1D);
@@ -122,7 +129,7 @@ namespace SIGVerse.Competition.InteractiveCleanup
 			this.pinky2 .localRotation = Quaternion.Slerp(this.pinky2Start , this.pinky2End , handTrigger1D);
 			this.pinky3 .localRotation = Quaternion.Slerp(this.pinky3Start , this.pinky3End , handTrigger1D);
 		}
-#endif
+//#endif
 	}
 }
 

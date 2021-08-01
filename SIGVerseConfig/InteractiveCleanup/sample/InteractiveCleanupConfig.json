@@ -6,5 +6,6 @@
     "executionMode": 0,
     "isAlwaysGoNext": false,
     "playbackType": 1,
-    "bgmVolume": 0.01
+    "bgmVolume": 0.01,
+    "reduceLoadInDataGen": true
 }
