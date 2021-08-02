@@ -104,7 +104,7 @@ namespace SIGVerse.Competition.InteractiveCleanup
 		// Update is called once per frame
 		void LateUpdate()
 		{
-			float handTrigger1D = SteamVR_Actions.sigverse_Squeeze.GetAxis(this.inputSource);
+			float handTrigger1D = SteamVR_Actions.sigverse_SqueezeMiddle.GetAxis(this.inputSource);
 
 			// Change hand posture
 //			this.hand   .localRotation = Quaternion.Slerp(this.handStart   , this.handEnd   , handTrigger1D);
