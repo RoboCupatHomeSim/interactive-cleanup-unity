@@ -81,6 +81,11 @@ See [interactive-cleanup-ros](https://github.com/RoboCupatHomeSim/interactive-cl
 1. Copy the "SIGVerseConfig" folder and the "TTS" folder into the "Build" folder.
 2. Double Click the "InteractiveCleanup.exe" in the "Build" folder.
 
+## Note
+If you want to use the data generation mode, you need to prepare your VR device.  
+Please install [Steam](https://store.steampowered.com/about/) and [SteamVR](https://store.steampowered.com/app/250820/SteamVR/) on your PC. Download the installer from the official website and install it.  
+And please install [Oculus Software](https://www.oculus.com/setup/) to use Oculus Headsets. [Oculus Link](https://support.oculus.com/articles/headsets-and-accessories/oculus-link/index-oculus-link) is also required.
+
 ## License
 
 This project is licensed under the SIGVerse License - see the LICENSE.txt file for details.
