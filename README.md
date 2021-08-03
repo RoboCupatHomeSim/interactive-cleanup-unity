@@ -15,27 +15,21 @@ https://github.com/RoboCupatHomeSim/documents/blob/master/SoftwareManual/Environ
 
 ## How to Build
 
-### Import the common Unitypackage
+### Import unitypackages
 
+1. Download SteamVR Unity Plugin v2.7.3 from the following link.  
+https://github.com/ValveSoftware/steamvr_unity_plugin/releases/download/2.7.3/steamvr_2_7_3.unitypackage
 1. Open this project with Unity.
-2. Click [Assets]-[Import Package]-[Custom Package...].
-3. Select a common unitypackage (e.g. robocup-common.unitypackage) and open the file.
-4. Click [Import] button.
-5. Please confirm that no error occurred in Console window.
+1. Click [Continue] in the [Unity Package Manager Error] window.
+1. Click [Ignore] in the [Enter Safe Mode?] window.
+1. Click [Assets]-[Import Package]-[Custom Package...].
+1. Select a common unitypackage (e.g. robocup-common.unitypackage) and open the file.
+1. Click [Import] button.
+1. Click [Assets]-[Import Package]-[Custom Package...].
+1. Select the steamvr_2_7_3.unitypackage and open the file.
+1. Click [Import] button.
+1. Please confirm that no error occurred in Console window.
 
-### Import the Oculus Integration for Unity
-
-1. Download Oculus Integration for Unity ver.14.0 from the following link.  
-https://developer.oculus.com/downloads/package/unity-integration-archive/14.0/
-2. Open this project with Unity.
-3. Click [Assets]-[Import Package]-[Custom Package...].
-4. Select downloaded OculusIntegration_14.0.unitypackage and open the file.
-5. Click [Import] button.
-6. Click [Upgrade] when "Update Spatializer Plugins" window displayed.
-7. Click [Restart] when "Restart Unity" window displayed.
-8. Click [Yes] when "Update Oculus Utilities Plugin" window displayed.
-9. Click [Restart] when "Restart Unity" window displayed.
-10. Please confirm that no error occurred in Console window.
 
 ### Import Executable file and Dll for TTS
 
@@ -76,8 +70,9 @@ SIGVerse window will be opened.
 ## How to Execute Interactive Cleanup Program
 
 Please start the ROS side application beforehand.  
+See [interactive-cleanup-ros](https://github.com/RoboCupatHomeSim/interactive-cleanup-ros) for an example application.
 
-### Execute On Unity Editor
+### Execute on Unity Editor
 1. Click [SIGVerse]-[Set Default GameView Size].
 2. Double click "Assets/Competition/InteractiveCleanup/InteractiveCleanup(.unity)" in Project window.
 3. Click the Play button at the top of the Unity editor.
