@@ -107,11 +107,6 @@ namespace SIGVerse.Competition.InteractiveCleanup
 
 		private IEnumerator InitializeHumanForDataGeneration()
 		{
-			if(CleanupConfig.Instance.configFileInfo.reduceLoadInDataGen)
-			{
-				this.ReduceLoad();
-			}
-
 			yield return this.InitializeXRForDataGeneration();
 
 			this.EnableScriptsForDataGeneration();
@@ -140,14 +135,6 @@ namespace SIGVerse.Competition.InteractiveCleanup
 			xrManagerSettings.activeLoader.Start();
 
 			SteamVR_Actions.sigverse.Activate(SteamVR_Input_Sources.Any);
-		}
-
-		private void ReduceLoad()
-		{
-			this.rosBridgeScripts.GetComponentInChildren<HSRPubXtionDepthController>().sendingInterval *= 1000;
-			this.rosBridgeScripts.GetComponentInChildren<HSRPubXtionRGBController>().sendingInterval *= 1000;
-			this.rosBridgeScripts.GetComponentInChildren<HSRPubStereoRGBController>().sendingInterval *= 1000;
-			this.rosBridgeScripts.GetComponentsInChildren<HSRPubWideRGBController>().ToList().ForEach(x => x.sendingInterval *= 1000);
 		}
 
 		private void EnableScriptsForDataGeneration()
