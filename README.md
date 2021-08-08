@@ -67,7 +67,7 @@ For details on these files, see [here](https://github.com/RoboCupatHomeSim/conso
 SIGVerse window will be opened.
 3. Type the IP address of ROS to "Rosbridge IP" in SIGVerse window.
 
-## How to Execute Interactive Cleanup Program
+## How to Execute Interactive Cleanup
 
 Please start the ROS side application beforehand.  
 See [interactive-cleanup-ros](https://github.com/RoboCupatHomeSim/interactive-cleanup-ros) for an example application.
