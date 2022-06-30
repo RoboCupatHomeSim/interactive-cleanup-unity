@@ -28,7 +28,6 @@ https://github.com/ValveSoftware/steamvr_unity_plugin/releases/download/2.7.3/st
 1. Click [Assets]-[Import Package]-[Custom Package...].
 1. Select the steamvr_2_7_3.unitypackage and open the file.
 1. Click [Import] button.
-1. If the Valve.VR.SteamVR_UnitySettingsWindow appears, click [Ignore All], and then click [Yes, Ignore All].
 1. Please confirm that no error occurred in Console window.
 
 
@@ -79,10 +78,11 @@ See [interactive-cleanup-ros](https://github.com/RoboCupatHomeSim/interactive-cl
 3. Click the Play button at the top of the Unity editor.
 
 ### Execute the Executable file
-1. Copy the "SIGVerseConfig" folder and the "TTS" folder into the "Build" folder.
+1. Copy the "TTS" folder into the "Build" folder.
 2. Double Click the "InteractiveCleanup.exe" in the "Build" folder.
 
-## Note
+## Data generation mode
+Please see [wiki page](https://github.com/RoboCupatHomeSim/interactive-cleanup-unity/wiki) for more details.  
 If you want to use the data generation mode, you need to prepare your VR device.  
 Please install [Steam](https://store.steampowered.com/about/) and [SteamVR](https://store.steampowered.com/app/250820/SteamVR/) on your PC. Download the installer from the official website and install it.  
 And please install [Oculus Software](https://www.oculus.com/setup/) to use Oculus Headsets. [Oculus Link](https://support.oculus.com/articles/headsets-and-accessories/oculus-link/index-oculus-link) is also required.
