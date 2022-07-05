@@ -52,10 +52,11 @@ For details on these files, see [here](https://github.com/RoboCupatHomeSim/conso
 
 ### Build
 1. Create a "Build" folder under this project folder.
-2. Open this project with Unity.
-3. Click [File]-[Build Settings].
-4. Click [Build]
-5. Select the "Build" folder , and type a file name (e.g. InteractiveCleanup) and save the file.
+1. Open this project with Unity.
+1. Click [File]-[Build Settings].
+1. Click [Build]
+1. Select the "Build" folder , and type a file name (e.g. InteractiveCleanup) and save the file.
+1. Copy the "TTS" folder under the "Build" folder.
 
 
 ## How to Set Up
@@ -78,8 +79,7 @@ See [interactive-cleanup-ros](https://github.com/RoboCupatHomeSim/interactive-cl
 3. Click the Play button at the top of the Unity editor.
 
 ### Execute the Executable file
-1. Copy the "TTS" folder into the "Build" folder.
-2. Double Click the "InteractiveCleanup.exe" in the "Build" folder.
+1. Double Click the "InteractiveCleanup.exe" in the "Build" folder.
 
 ## Data generation mode
 Please see [wiki page](https://github.com/RoboCupatHomeSim/interactive-cleanup-unity/wiki) for more details.  
